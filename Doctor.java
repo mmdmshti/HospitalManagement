@@ -10,6 +10,8 @@ public class Doctor implements A{
     static List<Doctor> Doctors = new ArrayList<>();
     Scanner input = new Scanner(System.in);
 
+    public Doctor(){}
+
     public Doctor(String name , int age){
         this.name = name;
         this.age = age;
@@ -18,7 +20,6 @@ public class Doctor implements A{
     }
     void addDoc(){
         Doctors.add(new Doctor(getName() , getAge()));
-        main main = new main();
         main.ShowList();
     }
     String getName(){
@@ -30,18 +31,31 @@ public class Doctor implements A{
         return input.nextInt();
     }
     void setName(int id){
-        System.out.println("new name: ");
-        String name = input.next();
+
         for(Doctor D : Doctors){
             if(id == D.DocId){
-                D.name = name;
-                main main = new main();
+                System.out.println("new name: ");
+                D.name = input.next();
+
                 main.ShowList();
             }
         }
         System.out.println("doctor not found");
+
+        main.ShowList();
     }
-    void setAge(){
+    void setAge(int id){
+        for(Doctor D : Doctors){
+            if(id == D.DocId){
+                System.out.println("new age: ");
+                D.age = input.nextInt();
+
+                main.ShowList();
+            }
+        }
+        System.out.println("doctor not found");
+
+        main.ShowList();
 
     }
 
