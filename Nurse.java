@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Nurse implements A{
-
+    JDBCDemo J = new JDBCDemo();
     String name;
     int age;
     int NurseId;
@@ -19,8 +19,7 @@ public class Nurse implements A{
 
     }
     void addNurse(){
-        Nurses.add(new Nurse(getName() , getAge()));
-
+        J.saveNurse();
         main.ShowList();
 
     }

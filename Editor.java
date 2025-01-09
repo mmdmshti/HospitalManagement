@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Editor {
+    JDBCDemo J = new JDBCDemo();
     Scanner input = new Scanner(System.in);
     Doctor doctor = new Doctor();
     Nurse nurse = new Nurse();
@@ -16,6 +17,18 @@ public class Editor {
             main.ShowList();
         }
         return a;
+    }
+    int getRoomNumber() {
+        int a = 0;
+        try {
+            System.out.println("please enter the roomNumber: ");
+            a = input.nextInt();
+        } catch (Exception e) {
+            main.ShowList();
+        }
+        return a;
+
+
     }
     int getNationalCode(){
         int a = 0;
@@ -40,7 +53,11 @@ public class Editor {
                 9. Change patients room
                 10. Change patient statue
                 11. Change roomNumber
-                12. Change roomType              
+                12. Change roomType
+                13. Delete Doctor
+                14. Delete Nurse
+                15. Delete Patient
+                16. Delete Room             
                                
                 """);
         System.out.println("choose one option");
@@ -75,8 +92,21 @@ public class Editor {
         if(a == 10){
             patient.setStatue(getNationalCode());
         }
-        if(a == 11){
-
+        if(a == 13){
+            int id = getID();
+            J.deleteDOC(id);
+        }
+        if(a == 14){
+            int id = getID();
+            J.deleteNurse(id);
+        }
+        if(a == 15){
+            int nationalCode = getNationalCode();
+            J.deletePatient(nationalCode);
+        }
+        if(a == 16){
+            int roomnumber = getRoomNumber();
+            J.deleteRoom(roomnumber);
         }
 
     }

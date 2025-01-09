@@ -1,13 +1,16 @@
-import com.sun.tools.javac.Main;
 
 import java.util.Scanner;
 
 public class main {
     public static void main(String[] args) {
+
         ShowList();
+
+
     }
 
     static void ShowList() {
+        JDBCDemo J = new JDBCDemo();
         Scanner input = new Scanner(System.in);
         Doctor doctor = new Doctor();
         Nurse nurse = new Nurse();
@@ -20,7 +23,10 @@ public class main {
                 4- Editor
                 5- Docs
                 6- Nurses
-                7- Patients""");
+                7- Patients
+                8- Rooms
+                9- add Room
+                """);
 
 
         System.out.println("choose one option? ");
@@ -39,21 +45,24 @@ public class main {
             editor.Edit();
         }
         if(a == 5){
-            for(Doctor d : Doctor.Doctors){
-                System.out.println(d.name + " " + d.age + " " + d.DocId +"\n");
-            }
+        J.getAllDoctors();
+        ShowList();
         }
         if(a == 6){
-            for(Nurse n : Nurse.Nurses){
-                System.out.println(n.name + " " + n.NurseId + " " + n.age +"\n");
-            }
+            J.getAllNurses();
+            ShowList();
 
         }
         if(a == 7){
-            for(Patient p : Patient.Patients){
-                System.out.println(p.name + " " + p.NationalCode + " " + p.age + " " +p.doctor + " " + p.statue +"\n");
-            }
+            J.getAllPatients();
             ShowList();
+
+        }
+        if(a == 8){
+        }
+        if(a == 9){
+            Room room = new Room();
+            room.addRoom();
 
         }
 }

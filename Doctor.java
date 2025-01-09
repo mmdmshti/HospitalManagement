@@ -8,6 +8,7 @@ public class Doctor implements A{
     int age;
     int DocId;
     static List<Doctor> Doctors = new ArrayList<>();
+    JDBCDemo J = new JDBCDemo();
     Scanner input = new Scanner(System.in);
 
     public Doctor(){}
@@ -17,9 +18,13 @@ public class Doctor implements A{
         this.age = age;
         this.DocId = generateID();
 
+
+
     }
     void addDoc(){
-        Doctors.add(new Doctor(getName() , getAge()));
+
+
+        J.saveDoctor();
         main.ShowList();
     }
     String getName(){
