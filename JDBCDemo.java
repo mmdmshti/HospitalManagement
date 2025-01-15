@@ -2,8 +2,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import javax.swing.*;
+
 public class JDBCDemo {
     static List<Integer> Rooms = new ArrayList<>();
+
 
 
 
@@ -17,28 +21,41 @@ public class JDBCDemo {
             }
             public void saveDoctor() {
                 Doctor doctor = new Doctor();
+                HospitalManagementGUI UI = new HospitalManagementGUI();
                 String query = "INSERT INTO Doctors (name, age, DocID) VALUES (?, ?, ?)";
                 try (Connection conn = connect();
                      PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    pstmt.setString(1, doctor.getName() );
-                    pstmt.setInt(2, doctor.getAge());
+                    pstmt.setString(1, HospitalManagementGUI.name);
+                    pstmt.setInt(2, HospitalManagementGUI.age);
                     pstmt.setInt(3, doctor.generateID());
                     pstmt.executeUpdate();
                 } catch (SQLException e) {
-                    main.ShowList();
+                    e.printStackTrace();
                 }
             }
-            void deleteDOC(int DocID){
+            public void deleteDOC(){
                 String query = "DELETE FROM Doctors WHERE DocID = ?";
-                try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(query)){
-                    pstmt.setInt(1,DocID );
+                try (Connection conn = connect();
+                     PreparedStatement pstmt = conn.prepareStatement(query)){
+                    pstmt.setInt(1,HospitalManagementGUI.id );
                     pstmt.executeUpdate();
-                    main.ShowList();
                 } catch (SQLException e) {
                     e.printStackTrace();
 
                 }
             }
+    public void updateDoctorName() {
+
+        String query = "UPDATE Doctors SET name = ? WHERE DocID = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1,HospitalManagementGUI.name1 );
+            pstmt.setInt(2, HospitalManagementGUI.id1);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void getAllDoctors() {
         String query = "SELECT * FROM Doctors";
         try (Connection conn = connect();
@@ -81,6 +98,17 @@ public class JDBCDemo {
 
                 }
             }
+    public void updateNurseName(int NurseID, String newName) {
+        String query = "UPDATE Nurses SET name = ? WHERE NurseID = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, NurseID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void getAllNurses() {
         String query = "SELECT * FROM Doctors";
         try (Connection conn = connect();
@@ -171,6 +199,28 @@ public class JDBCDemo {
         }
 
     }
+    public void updatePatientName(int NationalCode, String newName) {
+        String query = "UPDATE Patients SET name = ? WHERE NationalCode = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, NationalCode);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void updatePatientRoomNumber(int NationalCode, int newRoomNumber) {
+        String query = "UPDATE Patients SET RoomNumber = ? WHERE NationalCode = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, newRoomNumber);
+            pstmt.setInt(2, NationalCode);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public void getAllPatients() {
@@ -190,7 +240,10 @@ public class JDBCDemo {
             e.printStackTrace();
         }
     }
+
     }
+
+
 
 
 

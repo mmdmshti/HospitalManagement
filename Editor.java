@@ -42,69 +42,62 @@ public class Editor {
     }
     void Edit() {
         System.out.println("""
-                1. Change Doctor Name
-                2. Change Doctor Age
-                3. Change Nurse Name
-                4. Change Nurse Age
-                5. Change Patient Name
-                6. Change Patient Age
-                7. Change Patient NationalCode
-                8. Change Patients Doctor
-                9. Change patients room
-                10. Change patient statue
-                11. Change roomNumber
-                12. Change roomType
-                13. Delete Doctor
-                14. Delete Nurse
-                15. Delete Patient
-                16. Delete Room             
+                1. update Doctor name
+                2. update nurse name
+                3. update patient name
+                4. update patient's room
+                5. Delete Doctor
+                6. Delete Nurse
+                7. Delete Patient
+                8. Delete Room             
                                
                 """);
         System.out.println("choose one option");
         int a = input.nextInt();
         if(a == 1){
-            doctor.setName(getID());
+            int id = getID();
+            System.out.println("please enter new name: ");
+            String newName = input.next();
+            J.updateDoctorName();
         }
         if(a == 2){
-            doctor.setAge(getID());
+            int id = getID();
+            System.out.println("please enter new name: ");
+            String newName = input.next();
+            J.updateNurseName(id ,newName );
         }
-        if (a == 3){
-            nurse.setName(getID());
+        if(a == 3){
+            int nc = getNationalCode();
+            System.out.println("please enter new name: ");
+            String newName = input.next();
+            J.updatePatientName(nc ,newName);
+
         }
         if(a == 4){
-            nurse.setAge(getID());
+            int nc = getNationalCode();
+            System.out.println("enter the new room number");
+            int rn = input.nextInt();
+            for(int l : JDBCDemo.Rooms){
+                if(l == rn){
+                    J.updatePatientRoomNumber(nc ,rn );
+                }
+            }
+            main.ShowList();
         }
+
         if(a == 5){
-            patient.setName(getNationalCode());
+            int id = getID();
+            J.deleteDOC();
         }
         if(a == 6){
-            patient.setAge(getNationalCode());
-        }
-        if(a == 7){
-            patient.setNationalCode(getNationalCode());
-        }
-        if (a == 8){
-            patient.setDoctor(getNationalCode());
-        }
-        if(a == 9){
-            patient.setRoom(getNationalCode());
-        }
-        if(a == 10){
-            patient.setStatue(getNationalCode());
-        }
-        if(a == 13){
-            int id = getID();
-            J.deleteDOC(id);
-        }
-        if(a == 14){
             int id = getID();
             J.deleteNurse(id);
         }
-        if(a == 15){
+        if(a == 7){
             int nationalCode = getNationalCode();
             J.deletePatient(nationalCode);
         }
-        if(a == 16){
+        if(a == 8){
             int roomnumber = getRoomNumber();
             J.deleteRoom(roomnumber);
         }

@@ -23,11 +23,13 @@ public class Doctor implements A{
     }
     void addDoc(){
 
+        HospitalManagementGUI UI = new HospitalManagementGUI();
 
-        J.saveDoctor();
+//        J.saveDoctor();
         main.ShowList();
     }
     String getName(){
+        HospitalManagementGUI UI = new HospitalManagementGUI();
         System.out.println("Doctors name: ");
         return input.next();
     }
