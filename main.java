@@ -36,13 +36,13 @@ public class main {
             ShowList();
         }
         if(a == 2){
-            nurse.addNurse();
+//            nurse.addNurse();
         }
         if(a == 3){
-            patient.addPatient();
+//            patient.addPatient();
         }
         if(a == 4){
-            editor.Edit();
+//            editor.Edit();
         }
         if(a == 5){
         J.getAllDoctors();

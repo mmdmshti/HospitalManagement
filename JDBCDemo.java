@@ -2,11 +2,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import javax.swing.*;
-
 public class JDBCDemo {
-    static List<Integer> Rooms = new ArrayList<>();
+    static List<Room> Rooms = new ArrayList<>();
+    static List<Doctor> doctors = new ArrayList<>();
+    static List<Nurse> Nurses = new ArrayList<>();
+
 
 
 
@@ -19,14 +19,78 @@ public class JDBCDemo {
             private Connection connect() throws SQLException {
                 return DriverManager.getConnection(URL, USER, PASSWORD);
             }
-            public void saveDoctor() {
+
+
+
+
+        public String checkDoctorExists() {
+                Doctor doctor = new Doctor();
+            String query = "SELECT DocID FROM Doctors WHERE DocID = ?";
+            try (Connection conn = connect();
+                 PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setInt(1, doctor.getID());
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        return "exists";
+                    } else {
+                        return "does not exist";
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return "failed";
+            }
+        }
+    public String checkNurseExists() {
+        Nurse nurse = new Nurse();
+        String query = "SELECT NurseID FROM Nurses WHERE NurseID = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, nurse.getID());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return "exists";
+                } else {
+                    return "does not exist";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed";
+        }
+    }
+    public String checkRoomExists() {
+                Room room = new Room();
+        String query = "SELECT RoomNumber FROM Rooms WHERE RoomNumber = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1,room.getRoomNumber() );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return "exists";
+                } else {
+                    return "does not exist";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed";
+        }
+    }
+
+
+
+
+
+
+    public void saveDoctor() {
                 Doctor doctor = new Doctor();
                 HospitalManagementGUI UI = new HospitalManagementGUI();
                 String query = "INSERT INTO Doctors (name, age, DocID) VALUES (?, ?, ?)";
                 try (Connection conn = connect();
                      PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    pstmt.setString(1, HospitalManagementGUI.name);
-                    pstmt.setInt(2, HospitalManagementGUI.age);
+                    pstmt.setString(1, doctor.getName());
+                    pstmt.setInt(2, doctor.getAge());
                     pstmt.setInt(3, doctor.generateID());
                     pstmt.executeUpdate();
                 } catch (SQLException e) {
@@ -34,43 +98,48 @@ public class JDBCDemo {
                 }
             }
             public void deleteDOC(){
+                Doctor doctor = new Doctor();
                 String query = "DELETE FROM Doctors WHERE DocID = ?";
                 try (Connection conn = connect();
                      PreparedStatement pstmt = conn.prepareStatement(query)){
-                    pstmt.setInt(1,HospitalManagementGUI.id );
+                    pstmt.setInt(1,doctor.getID() );
                     pstmt.executeUpdate();
+
                 } catch (SQLException e) {
                     e.printStackTrace();
-
                 }
+
             }
     public void updateDoctorName() {
+                Doctor doctor = new Doctor();
 
         String query = "UPDATE Doctors SET name = ? WHERE DocID = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1,HospitalManagementGUI.name1 );
-            pstmt.setInt(2, HospitalManagementGUI.id1);
+            pstmt.setString(1,doctor.getName());
+            pstmt.setInt(2, doctor.getID());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public void getAllDoctors() {
+    public List<Doctor> getAllDoctors() {
+                doctors.clear();
         String query = "SELECT * FROM Doctors";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
-
             while (rs.next()) {
                 String name = rs.getString("name");
                 int age = rs.getInt("age");
                 int DocID = rs.getInt("DocID");
-                System.out.println("name: " + name + ", age: " + age + ", DocID: " + DocID);
+                doctors.add(new Doctor(name , age , DocID));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return doctors;
     }
 
             public void saveNurse() {
@@ -87,30 +156,32 @@ public class JDBCDemo {
                 }
             }
 
-            public void deleteNurse(int NurseID) {
+            public void deleteNurse() {
+                Nurse nurse = new Nurse();
                 String query = "DELETE FROM Nurses WHERE NurseID = ?";
                 try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(query)){
-                    pstmt.setInt(1, NurseID);
+                    pstmt.setInt(1, nurse.getID());
                     pstmt.executeUpdate();
-                    main.ShowList();
                 } catch (SQLException e) {
                     e.printStackTrace();
 
                 }
             }
-    public void updateNurseName(int NurseID, String newName) {
+    public void updateNurseName() {
+                Nurse nurse = new Nurse();
         String query = "UPDATE Nurses SET name = ? WHERE NurseID = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, newName);
-            pstmt.setInt(2, NurseID);
+            pstmt.setString(1, nurse.getName());
+            pstmt.setInt(2, nurse.getID());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public void getAllNurses() {
-        String query = "SELECT * FROM Doctors";
+    public List<Nurse> getAllNurses() {
+                Nurses.clear();
+        String query = "SELECT * FROM Nurses";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -118,52 +189,53 @@ public class JDBCDemo {
             while (rs.next()) {
                 String name = rs.getString("name");
                 int age = rs.getInt("age");
-                int DocID = rs.getInt("NurseID");
-                System.out.println("name: " + name + ", age: " + age + ", NurseID: " + DocID);
+                int NurseID = rs.getInt("NurseID");
+                Nurses.add(new Nurse(name , age , NurseID));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return Nurses;
     }
-    public void saveRoom() {
-                Doctor doctor = new Doctor();
-        Room room = new Room();
-        String query = "INSERT INTO Rooms (RoomNumber, type) VALUES (? , ?)";
+
+    //Room
+    public Boolean saveRoom() {
+                Room room = new Room();
+        String query = "INSERT INTO Rooms (RoomNumber) VALUES (?)";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1,doctor.generateID());
-            pstmt.setString(2,room.getRoomType());
-            RoomList();
+            pstmt.setInt(1,room.getRoomNumber());
             pstmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            main.ShowList();
+            return false;
         }
-        main.ShowList();
     }
-    public void RoomList(){
+    public List<Room> getAllRooms(){
+        Rooms.clear();
         String query = "SELECT * FROM Rooms";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                int RN = rs.getInt("RoomNumber");
-                Rooms.add(RN);
+                int RoomNumber = rs.getInt("RoomNumber");
+                String statue = rs.getString("statue");
+                Rooms.add(new Room(RoomNumber , statue));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return Rooms;
 
+            }
 
-    }
-
-    void deleteRoom(int RoomNumber){
+    void deleteRoom(){
+                Room room = new Room();
         String query = "DELETE FROM Rooms WHERE RoomNumber = ?";
         try (Connection conn = connect();
             PreparedStatement pstmt = conn.prepareStatement(query)){
-            pstmt.setInt(1, RoomNumber);
+            pstmt.setInt(1, room.getRoomNumber());
             pstmt.executeUpdate();
-            main.ShowList();
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -171,21 +243,23 @@ public class JDBCDemo {
 
     }
 
-    public void savePatient() {
-        Patient patient = new Patient();
-        String query = "INSERT INTO Patients(name, age, NationalCode, RoomNumber) VALUES (?, ?, ?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, patient.getName());
-            pstmt.setInt(2, patient.getAge());
-            pstmt.setInt(3, patient.getNationalCode());
-            pstmt.setInt(4, patient.getRoomNumber());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            main.ShowList();
-        }
+    //Patient
 
-    }
+//    public void savePatient() {
+//        Patient patient = new Patient();
+//        String query = "INSERT INTO Patients(name, age, NationalCode, RoomNumber) VALUES (?, ?, ?, ?)";
+//        try (Connection conn = connect();
+//             PreparedStatement pstmt = conn.prepareStatement(query)) {
+//            pstmt.setString(1, patient.getName());
+//            pstmt.setInt(2, patient.getAge());
+//            pstmt.setInt(3, patient.getNationalCode());
+//            pstmt.setInt(4, patient.getRoomNumber());
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            main.ShowList();
+//        }
+//
+//    }
     void deletePatient(int NationalCode){
         String query = "DELETE FROM Patients WHERE NationalCode = ?";
         try (Connection conn = connect();

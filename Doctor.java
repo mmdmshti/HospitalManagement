@@ -3,69 +3,22 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Doctor implements A{
+public class Doctor extends Person implements A{
+    int DocId;
     String name;
     int age;
-    int DocId;
-    static List<Doctor> Doctors = new ArrayList<>();
-    JDBCDemo J = new JDBCDemo();
-    Scanner input = new Scanner(System.in);
-
-    public Doctor(){}
-
-    public Doctor(String name , int age){
+    int DocID;
+    public Doctor(){};
+    public Doctor(String name , int age , int DocId){
         this.name = name;
         this.age = age;
-        this.DocId = generateID();
-
-
-
+        this.DocId = DocId;
     }
+
     void addDoc(){
-
         HospitalManagementGUI UI = new HospitalManagementGUI();
-
-//        J.saveDoctor();
         main.ShowList();
     }
-    String getName(){
-        HospitalManagementGUI UI = new HospitalManagementGUI();
-        System.out.println("Doctors name: ");
-        return input.next();
-    }
-    int getAge(){
-        System.out.println("Doctors age: ");
-        return input.nextInt();
-    }
-    void setName(int id){
-
-        for(Doctor D : Doctors){
-            if(id == D.DocId){
-                System.out.println("new name: ");
-                D.name = input.next();
-
-                main.ShowList();
-            }
-        }
-        System.out.println("doctor not found");
-
-        main.ShowList();
-    }
-    void setAge(int id){
-        for(Doctor D : Doctors){
-            if(id == D.DocId){
-                System.out.println("new age: ");
-                D.age = input.nextInt();
-
-                main.ShowList();
-            }
-        }
-        System.out.println("doctor not found");
-
-        main.ShowList();
-
-    }
-
 
     @Override
     public int generateID() {
