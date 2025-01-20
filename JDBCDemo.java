@@ -6,6 +6,7 @@ public class JDBCDemo {
     static List<Room> Rooms = new ArrayList<>();
     static List<Doctor> doctors = new ArrayList<>();
     static List<Nurse> Nurses = new ArrayList<>();
+    static List<Patient> Patients = new ArrayList<>();
 
 
 
@@ -19,6 +20,26 @@ public class JDBCDemo {
             private Connection connect() throws SQLException {
                 return DriverManager.getConnection(URL, USER, PASSWORD);
             }
+
+    public String checkAvailability() {
+                Room room = new Room();
+        String query = "SELECT RoomNumber FROM Rooms WHERE statue = ? AND RoomNumber = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, "true");
+            pstmt.setInt(2, room.getRoomNumber());
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return "exists";
+                } else {
+                    return "does not exist";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed";
+        }
+    }
 
 
 
@@ -65,6 +86,24 @@ public class JDBCDemo {
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1,room.getRoomNumber() );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return "exists";
+                } else {
+                    return "does not exist";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed";
+        }
+    }
+    public String checkPatientExists() {
+        Patient patient = new Patient();
+        String query = "SELECT NationalCode FROM Patients WHERE NationalCode = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1,patient.getNationalCode());
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return "exists";
@@ -245,31 +284,35 @@ public class JDBCDemo {
 
     //Patient
 
-//    public void savePatient() {
-//        Patient patient = new Patient();
-//        String query = "INSERT INTO Patients(name, age, NationalCode, RoomNumber) VALUES (?, ?, ?, ?)";
-//        try (Connection conn = connect();
-//             PreparedStatement pstmt = conn.prepareStatement(query)) {
-//            pstmt.setString(1, patient.getName());
-//            pstmt.setInt(2, patient.getAge());
-//            pstmt.setInt(3, patient.getNationalCode());
-//            pstmt.setInt(4, patient.getRoomNumber());
-//            pstmt.executeUpdate();
-//        } catch (SQLException e) {
-//            main.ShowList();
-//        }
-//
-//    }
-    void deletePatient(int NationalCode){
+    public String savePatient() {
+
+        Patient patient = new Patient();
+        Doctor doctor =new Doctor();
+        Room room = new Room();
+        String query = "INSERT INTO Patients(name, age, NationalCode, RoomNumber , DocID) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, patient.getName());
+            pstmt.setInt(2, patient.getAge());
+            pstmt.setInt(3, patient.getNationalCode());
+            pstmt.setInt(4, room.getRoomNumber());
+            pstmt.setInt(5, doctor.getID());
+            pstmt.executeUpdate();
+            return "true";
+        } catch (SQLException e) {
+            return e.getMessage();
+        }
+
+    }
+    void deletePatient(){
+                Patient patient = new Patient();
         String query = "DELETE FROM Patients WHERE NationalCode = ?";
         try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(query)){
-            pstmt.setInt(1, NationalCode);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, patient.getNationalCode());
             pstmt.executeUpdate();
-            main.ShowList();
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
 
     }
@@ -284,12 +327,14 @@ public class JDBCDemo {
             e.printStackTrace();
         }
     }
-    public void updatePatientRoomNumber(int NationalCode, int newRoomNumber) {
+    public void updatePatientRoomNumber() {
+                Room room = new Room();
+                Patient patient = new Patient();
         String query = "UPDATE Patients SET RoomNumber = ? WHERE NationalCode = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, newRoomNumber);
-            pstmt.setInt(2, NationalCode);
+            pstmt.setInt(1, room.getRoomNumber());
+            pstmt.setInt(2, patient.getNationalCode());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -297,23 +342,50 @@ public class JDBCDemo {
     }
 
 
-    public void getAllPatients() {
+    public List<Patient> getAllPatients(){
+        Patients.clear();
         String query = "SELECT * FROM Patients";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
-
             while (rs.next()) {
                 String name = rs.getString("name");
                 int age = rs.getInt("age");
                 int NationalCode = rs.getInt("NationalCode");
                 int RoomNumber = rs.getInt("RoomNumber");
-                System.out.println("name: " + name + ", age: " + age + ", NationalCode: " + NationalCode + ", RoomNumber: " + RoomNumber);
+                int DocID = rs.getInt("DocID");
+                Patients.add(new Patient(name , age , NationalCode , RoomNumber , DocID));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return Patients;
+
     }
+    public void updateRoomStatue(int RoomNumber) {
+        String query = "UPDATE Rooms SET statue = ? WHERE RoomNumber = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1,"false" );
+            pstmt.setInt(2,RoomNumber );
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void updateRoomStatue2(int RoomNumber) {
+        String query = "UPDATE Rooms SET statue = ? WHERE RoomNumber = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1,"true" );
+            pstmt.setInt(2,RoomNumber );
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     }
 

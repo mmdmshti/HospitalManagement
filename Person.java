@@ -8,7 +8,7 @@ public class Person {
         Person.name = name;
 
     }
-    String getName(){
+     String getName(){
         return Person.name;
     }
     void setAge(int age){

@@ -15,10 +15,7 @@ public class Doctor extends Person implements A{
         this.DocId = DocId;
     }
 
-    void addDoc(){
-        HospitalManagementGUI UI = new HospitalManagementGUI();
-        main.ShowList();
-    }
+
 
     @Override
     public int generateID() {

@@ -26,23 +26,5 @@ public class Room {
     int getRoomNumber(){
         return Room.RoomNumber2;
     }
-    void addRoom(){
-        J.saveRoom();
 
-    }
-    String getRoomType(){
-        String t = null;
-        try{
-            System.out.println("please enter Room type: ");
-            t = input.next();
-        }catch (Exception e){
-            main.ShowList();
-
-        }
-        return t;
-    }
-     void assigner() {
-         J.saveRoom();
-
-    }
 }

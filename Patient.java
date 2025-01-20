@@ -3,32 +3,33 @@ import java.util.List;
 import java.util.Scanner;
 
 public class  Patient extends Person {
-    JDBCDemo J = new JDBCDemo();
     String name;
     int age;
     int NationalCode;
-    Doctor doctor;
-    int x = 0;
-    static List<Patient> Patients = new ArrayList<>();
-    Scanner input = new Scanner(System.in);
+    static int NationalCode2;
+    int DocID,RoomNumber;
+    static int DocID2,RoomNumber2;
+
 
     public Patient() {
     }
 
-    public Patient(String name, int age, int NationalCode, Doctor doctor) {
+    public Patient(String name, int age, int NationalCode, int RoomNumber , int DocID) {
         this.name = name;
         this.age = age;
         this.NationalCode = NationalCode;
-        this.doctor = doctor;
-        Room room1 = new Room();
-        room1.assigner();
+        this.DocID = DocID;
+        this.RoomNumber = RoomNumber;
+
     }
 
     void setNationalCode(int nationalCode) {
-        this.NationalCode = nationalCode;
+        Patient.NationalCode2 = nationalCode;
     }
 
     int getNationalCode() {
-        return NationalCode;
+        return Patient.NationalCode2;
     }
+
+
 }
