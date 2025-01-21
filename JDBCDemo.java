@@ -130,18 +130,22 @@ public class JDBCDemo {
                      PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, doctor.getName());
                     pstmt.setInt(2, doctor.getAge());
-                    pstmt.setInt(3, doctor.generateID());
+                    pstmt.setInt(3, doctor.getID());
+                    File file = new File();
+                    file.DocSaver(doctor.getName(), doctor.getAge(), doctor.getID());
                     pstmt.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
             public void deleteDOC(){
+                File file = new File();
                 Doctor doctor = new Doctor();
                 String query = "DELETE FROM Doctors WHERE DocID = ?";
                 try (Connection conn = connect();
                      PreparedStatement pstmt = conn.prepareStatement(query)){
                     pstmt.setInt(1,doctor.getID() );
+                    file.DocDelete(doctor.getID());
                     pstmt.executeUpdate();
 
                 } catch (SQLException e) {
@@ -151,13 +155,14 @@ public class JDBCDemo {
             }
     public void updateDoctorName() {
                 Doctor doctor = new Doctor();
-
+                File file = new File();
         String query = "UPDATE Doctors SET name = ? WHERE DocID = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1,doctor.getName());
             pstmt.setInt(2, doctor.getID());
             pstmt.executeUpdate();
+            file.UpdateDoc(doctor.getID());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -180,6 +185,9 @@ public class JDBCDemo {
         }
         return doctors;
     }
+
+
+
 
             public void saveNurse() {
                 Nurse nurse = new Nurse();

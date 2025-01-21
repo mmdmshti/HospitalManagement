@@ -74,7 +74,7 @@ public class HospitalManagementGUI {
         label.setBounds(50 , 20 , 100 , 30);
         frame.add(label);
 
-        String[] actions = {"Save", "Update", "Delete", "ShowAll"};
+        String[] actions = {"Save","Search", "Update", "Delete", "ShowAll"};
         JComboBox<String> comboBox = new JComboBox<>(actions);
         comboBox.setBounds(150, 20, 150, 30);
         frame.add(comboBox);
@@ -91,6 +91,9 @@ public class HospitalManagementGUI {
                 switch (Objects.requireNonNull(selected)) {
                     case "Save":
                         Save();
+                        break;
+                    case "Search":
+                        Search();
                         break;
                     case "Update":
                         Update();
@@ -152,6 +155,7 @@ public class HospitalManagementGUI {
                     Doctor doctor = new Doctor();
                     doctor.setName(textFieldName.getText());
                     doctor.setAge(parseInt(textFieldAge.getText()));
+                    doctor.setID(doctor.generateID());
                     j.saveDoctor();
                     JOptionPane.showMessageDialog(frame, "Doctor saved successfully.");
                 }catch (Exception a){
@@ -162,6 +166,53 @@ public class HospitalManagementGUI {
         });
 
         frame.setVisible(true);
+
+    }
+    public void Search(){
+        JDBCDemo j2 = new JDBCDemo();
+
+        frame =  new JFrame("SEARCH");
+        frame.setSize(400,300);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel labelId = new JLabel("Doctor ID:");
+        labelId.setBounds(50, 50, 100, 30);
+        frame.add(labelId);
+
+        textFieldId = new JTextField();
+        textFieldId.setBounds(150, 50, 150, 30);
+        frame.add(textFieldId);
+
+
+        JButton buttonUpdate = new JButton("SEARCH");
+        buttonUpdate.setBounds(150, 200, 80, 30);
+        frame.add(buttonUpdate);
+
+
+        buttonUpdate.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Doctor doctor = new Doctor();
+                    doctor.setID(parseInt(textFieldId.getText()));
+                    for(Doctor d : j2.getAllDoctors()){
+                        if(d.DocId == doctor.getID()){
+                            JOptionPane.showMessageDialog(frame, "Name: " + d.name + "\n"+ "Age: " + d.age + "\n"+ "Doctor ID: " + d.DocId);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(frame, "Doctor Not Found");
+
+                        }
+                    }
+                }catch (Exception a){
+                    JOptionPane.showMessageDialog(frame, a.getMessage());
+                }
+            }
+        });
+        frame.setVisible(true);
+
 
     }
     public void Update(){
@@ -293,7 +344,7 @@ public class HospitalManagementGUI {
         label.setBounds(50 , 20 , 100 , 30);
         frame.add(label);
 
-        String[] actions = {"Save", "Update", "Delete", "ShowAll"};
+        String[] actions = {"Save","Search", "Update", "Delete", "ShowAll"};
         JComboBox<String> comboBox = new JComboBox<>(actions);
         comboBox.setBounds(150, 20, 150, 30);
         frame.add(comboBox);
@@ -310,6 +361,9 @@ public class HospitalManagementGUI {
                 switch (Objects.requireNonNull(selected)) {
                     case "Save":
                         NSave();
+                        break;
+                    case "Search":
+                        NSearch();
                         break;
                     case "Update":
                         NUpdate();
@@ -381,6 +435,53 @@ public class HospitalManagementGUI {
         });
 
         frame.setVisible(true);
+
+    }
+    public void NSearch(){
+        JDBCDemo j2 = new JDBCDemo();
+
+        frame =  new JFrame("SEARCH");
+        frame.setSize(400,300);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel labelId = new JLabel("Nurse ID:");
+        labelId.setBounds(50, 50, 100, 30);
+        frame.add(labelId);
+
+        textFieldId = new JTextField();
+        textFieldId.setBounds(150, 50, 150, 30);
+        frame.add(textFieldId);
+
+
+        JButton buttonUpdate = new JButton("SEARCH");
+        buttonUpdate.setBounds(150, 200, 80, 30);
+        frame.add(buttonUpdate);
+
+
+        buttonUpdate.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Nurse nurse = new Nurse();
+                    nurse.setID(parseInt(textFieldId.getText()));
+                    for(Nurse n : j2.getAllNurses()){
+                        if(n.NurseId == nurse.getID()){
+                            JOptionPane.showMessageDialog(frame, "Name: " + n.name + "\n"+ "Age: " + n.age + "\n"+ "Nurse ID: " + n.NurseId);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(frame, "Nurse Not Found");
+
+                        }
+                    }
+                }catch (Exception a){
+                    JOptionPane.showMessageDialog(frame, a.getMessage());
+                }
+            }
+        });
+        frame.setVisible(true);
+
 
     }
     public void NUpdate(){
@@ -671,7 +772,7 @@ public void Patient() {
     label.setBounds(50 , 20 , 100 , 30);
     frame.add(label);
 
-    String[] actions = {"Save", "Delete","Update Room" ,"ShowAll"};
+    String[] actions = {"Save","Search", "Delete","Update Room" ,"ShowAll"};
     JComboBox<String> comboBox = new JComboBox<>(actions);
     comboBox.setBounds(150, 20, 150, 30);
     frame.add(comboBox);
@@ -688,6 +789,9 @@ public void Patient() {
             switch (Objects.requireNonNull(selected)) {
                 case "Save":
                     PSave();
+                    break;
+                case "Search":
+                    PSearch();
                     break;
                 case "Delete":
                     PDelete();
@@ -802,6 +906,53 @@ public void PSave() {
     frame.setVisible(true);
 
 }
+    public void PSearch(){
+        JDBCDemo j2 = new JDBCDemo();
+
+        frame =  new JFrame("SEARCH");
+        frame.setSize(400,300);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+
+        JLabel labelId = new JLabel("NationalCode:");
+        labelId.setBounds(50, 50, 100, 30);
+        frame.add(labelId);
+
+        textFieldId = new JTextField();
+        textFieldId.setBounds(150, 50, 150, 30);
+        frame.add(textFieldId);
+
+
+        JButton buttonUpdate = new JButton("SEARCH");
+        buttonUpdate.setBounds(150, 200, 80, 30);
+        frame.add(buttonUpdate);
+
+
+        buttonUpdate.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Patient patient = new Patient();
+                    patient.setNationalCode(parseInt(textFieldId.getText()));
+                    for(Patient p : j2.getAllPatients()){
+                        if(p.NationalCode == patient.getNationalCode()){
+                            JOptionPane.showMessageDialog(frame, "Name: " + p.name + "\n"+ "Age: " + p.age + "\n"+ "NationalCode: " + p.NationalCode +"\n" +  "Room Number: " + p.RoomNumber + "\n" + "Doctor ID:" + p.DocID);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(frame, "Patient Not Found");
+
+                        }
+                    }
+                }catch (Exception a){
+                    JOptionPane.showMessageDialog(frame, a.getMessage());
+                }
+            }
+        });
+        frame.setVisible(true);
+
+
+    }
 void PUpdateRoom(){
     JDBCDemo j2 = new JDBCDemo();
 
